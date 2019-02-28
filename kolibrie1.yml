@@ -1,0 +1,35 @@
+- name: Hello World Sample
+  hosts: all
+  vars:
+    package_name: "{{ package_name }}"
+    os_auth_url: "{{ os_auth_url }}"
+    os_username: "{{ os_username }}"
+    os_password: "{{ os_password }}"
+    os_project_name: "{{ os_project_name }}"
+    os_vm_state: "{{ os_vm_state }}"
+
+  tasks:
+    - name: Hello Message
+      debug:
+        msg: "Hello World!"
+    - name: "Install package: {{ package_name }}"
+      yum:
+        name: "{{ package_name }}"
+        state: latest
+    - name: Spawn a VM
+      delegate_to: localhost
+      os_server:
+        state: "{{ os_vm_state }}"
+        auth:
+          auth_url: "{{ os_auth_url }}"
+          username: "{{ os_username }}"
+          password: "{{ os_password }}"
+          project_name: "{{ os_project_name }}"
+          project_domain_name: default
+          user_domain_name: Default
+        name: ansible-test-1
+        image: 31c0024c-ef72-4fd4-ba14-f43976b86517
+        key_name: jubarbot
+        flavor: 1fb6c992-d219-4ec9-84a8-84e7927d5f56
+        nics:
+          - net-id: 140a3989-eec2-4efd-94ee-19a6fb4a224f
